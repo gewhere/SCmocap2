@@ -14,6 +14,8 @@ MCgnuplot {
 
 	initGnuplot { | mcread, m2jpar, animpar |
 		gnu = GNUPlot.new;
+		// gnu.sendCmd("unset key; unset tics; unset border; set view 60,60; set multiplot");
+		// gnu.sendCmd("splot 0");
 		this.makeJoints( mcread, m2jpar, animpar );
 		rawData = mcread.param['data'];
 	}
@@ -53,24 +55,29 @@ MCgnuplot {
 			"data = ".post; data.postln;
 		}
 		{ (type == \joints) && (what == nil) }{
-			// gnu.plot3( [[1,0,0], [1,1,0], [0,1,0], [-1,1,0], [-1,0,0], [-1,-1,0], [-1,0,0]] );
+			// this has length 20 - as the total number of markers in Demster's model
 			tmp = rawData[frame.asSymbol].getMarkersFrame(joints);
+			"ORIGINAL tmp: ".post; tmp.postln;
 			mydata = Array.newClear(tmp.size - 1);
 			// gnu.plot3(tmp, label: "mcmocap");
 			// do this an animpar stick figure
-			(tmp.size-1) do: { |i|
-				("tmp["++i.asString++ "] = ").post; tmp[i].postln;
+			try {
+				tmp.size do: { |i|
+					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
 
-				//if(i == 0){
+					//if(i == 0){
 					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
-				//}{
+					//}{
 					// ns:2 so to get a line of data and an empty line (DOES NOT WORK)
 					// http://www.gnuplotting.org/tag/linespoints/
 					// check plotting_data2.dat
-				//	gnu.replot([tmp[conn[i][0]-1],tmp[conn[i][1]-1]]);
-				//};	
+					//	gnu.replot([tmp[conn[i][0]-1],tmp[conn[i][1]-1]]);
+					//};	
+				};
 			};
-			"MYDATA: ".post; mydata.postln;
+			"PRE-MYDATA: ".post; mydata.size.postln;
+			// mydata = mydata.removeNils;
+			"MYDATA: ".post; mydata.size.postln;
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
 			gnu.plot3seg(mydata, "", "scmocap", "linespoints ls 1");
 		};

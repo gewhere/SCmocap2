@@ -22,7 +22,7 @@ MCread {
 	loadParameters { | filename |
 		var allMarkersNames, tmp;
 		
-		param = Dictionary.new;
+		param = IdentityDictionary.new;
 		// remove the 1st element from markername ("MARKER_NAMES")
 		tmp = fn[18].size - 1;
 		allMarkersNames = Array.newClear(tmp);
@@ -48,12 +48,14 @@ MCread {
 
 		// parameters.put(\data, data);
 	}
-
+	
 	cleanData {
+		// this method removes the first lines which have the metadata like date-time, total markers, etc. (and any empty lines produced from Stream -- see. FileReader)
+		// Also fixes the data that I get from TabFileReader, for some reason I cannot do binary operations on the array if I do not clean them first (as below -- I am not sure how 'hacky' is this, I think as far it works is fine! Occam's razor)
 		var str, cleanStr, array;
 
 		fn.size do: { |i|
-			if( (i > 18) && (i%2 ==0) ){
+			if( (i > 18) && (i%2 == 0) ){
 				str = fn[i].cs;
 				cleanStr = str.findRegexp("\-?[0-9]+\.[0-9]+");
 				

@@ -6,8 +6,9 @@ t.size;
 l = t.readAtLine( 22 );
 ~str = l.cs;
 )
-//
+
 (
+// get one frame
 l = t.readAtLine( 122 );
 ~str = l.cs;
 ~array = ~str.findRegexp("\-?[0-9]+\.[0-9]+");
@@ -18,9 +19,10 @@ l = t.readAtLine( 122 );
 };
 ~newarray.postln;
 )
-//
+
 
 (
+// make the animation
 {
 	440 do: { | i |
 		if( (i > 22)&&(i%2 == 0) ) {
@@ -35,7 +37,7 @@ l = t.readAtLine( 122 );
 			// ~newarray.postln
 			a.data = ~newarray.clump(3);
 		};
-		0.001.wait;
+		0.00001.wait;
 
 		w.refresh;
 	}
@@ -43,8 +45,8 @@ l = t.readAtLine( 122 );
 )
 
 
-// plot
 (
+// plot the connections
 var data;
 var dimen = 800;
 data = ~newarray.clump(3); // {{2.0.rand2}!3}!150;
@@ -73,6 +75,7 @@ Slider(w, Rect(dimen+40, 10, 10, dimen)).action_{|me|
 )
 
 (
+// plot the markers
 a.isHighlight = true;
 a.highlightColor = Color.green;
 a.highlightSize = 10@10;

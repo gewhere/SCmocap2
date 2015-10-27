@@ -13,8 +13,8 @@ MCm2jpar {
 	loadParameters { | nMarkers, markerNum, markerName |
 		param = IdentityDictionary.new;
 
-		if( nMarkers == nil){ nMarkers = () };
-		if(markerNum == nil){ markerNum = () };
+		if(  nMarkers == nil){ nMarkers = () };
+		if( markerNum == nil){ markerNum = () };
 		if(markerName == nil){ markerName = () };
 		
 		param.putPairs([

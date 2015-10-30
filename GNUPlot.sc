@@ -147,25 +147,43 @@ GNUPlot {
 			pipe.flush;
 		};
 	}
+
 	// 3D animation -- http://wiki.tcl.tk/13555
 	// http://stackoverflow.com/questions/11638636/gnuplot-plotting-positionxyz-vs-time-data-inside-a-specified-space-eg-a-box
-	plotd3d{ |data,ns=1,label=""|
+	plotd3d{ |data,ns=1,label="",style="linespoints"|
+		var delims=[" ", "\n\n", "\n\n\n"];
 		defer{
 			pipe.putString("splot ");
 			(ns-1).do{ |i|
-				pipe.putString("'-' title \""++label++(i+1)++"\",");
+				pipe.putString("'-' with "++style++" title \""++label++(i+1)++"\",");
 			};
-			pipe.putString("'-' title \""++label++ns++"\"\n");
+			pipe.putString("'-' with "++style++" title \""++label++ns++"\"\n");
 			if ( ns > 1,
 				{
 					ns.do{ |id|
-						data.at(id).do{ |it,i| pipe.putString( "%\n".format(it) ); };
-						pipe.putString("e\n");
+						data.at(id).do{ |it,i|
+							it.do{ |val|
+								pipe.putString( "%\n".format(val) ++ delims[0] );
+							};
+							pipe.putString(delims[1]);
+						};
+							pipe.putString(delims[2]);
 					};
 				},
 				{
-					data.do{ |it,i| pipe.putString( "%\n".format(it) ); };
-					pipe.putString("e\n");
+					data.do{ |col,i|
+						col.do { |sub|
+							sub.do { |val|
+								//pipe.putString( "%\n".format(val) );
+								pipe.putString( "%".format(val) ++ delims[0] );
+								//pipe.putString("e\n\n");
+							};
+							//pipe.putString("\n");
+							pipe.putString( delims[1] );
+						};
+						pipe.putString( "e" ++ delims[2]);
+						//pipe.putString("\n");
+					};
 				});
 			pipe.flush;
 		};
@@ -271,6 +289,29 @@ GNUPlot {
 		};
 	}
 
+	monitor3{ |updateF,dt,length=1,ns=1,skip=1| // id: id of data to monitor, dt: time step, skip: stepsize
+		updateFunc = updateF;
+		hisdata = Array.fill( length, 0 );
+		monrout = Task{
+			var cnt = 0;
+			inf.do{ 
+				hisdata.pop;
+				hisdata = hisdata.addFirst( updateFunc.value );
+				cnt = cnt + 1;
+				if ( cnt == skip,
+					{
+						if ( ns > 1, {
+							this.plotd3d( hisdata.flop, ns );
+						},{
+							this.plotd3d( hisdata ); //.flatten );//.flatten, ns); //.flatten, ns );
+						});
+						cnt = 0;
+					});
+				dt.wait;
+			}
+		};
+	}
+	
 	startMonitor{
 		monrout.stop.play;
 	}

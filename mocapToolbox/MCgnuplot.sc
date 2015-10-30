@@ -56,7 +56,7 @@ MCgnuplot {
 		}
 		{ (type == \joints) && (what == nil) }{
 			// this has length 20 - as the total number of markers in Demster's model
-			tmp = rawData[frame.asSymbol].getMarkersFrame(joints);
+			tmp = rawData[frame.asSymbol].getJoints(joints);
 			"ORIGINAL tmp: ".post; tmp.postln;
 			mydata = Array.newClear(tmp.size - 1);
 			// gnu.plot3(tmp, label: "mcmocap");
@@ -75,7 +75,7 @@ MCgnuplot {
 					//};	
 				};
 			};
-			"PRE-MYDATA: ".post; mydata.size.postln;
+			"PRE-MYDATA: ".post; mydata.postln;
 			// mydata = mydata.removeNils;
 			"MYDATA: ".post; mydata.size.postln;
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
@@ -84,5 +84,25 @@ MCgnuplot {
 
 	}
 
+	animateFrame { | frame, type, what |
+		var tmp, mydata;
 
+		if((type === \joints)&&(what == nil)) {
+			tmp = rawData[frame.asSymbol].getJoints(joints);
+			"ORIGINAL tmp: ".post; tmp.postln;
+			mydata = Array.newClear(tmp.size - 1);
+			
+			try {
+				tmp.size do: { |i|
+					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
+					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
+				};
+			};
+			"PRE-MYDATA: ".post; mydata.postln;
+			// mydata = mydata.removeNils;
+			"MYDATA: ".post; mydata.size.postln;
+			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
+			gnu.plot3seg(mydata, "", "scmocap", "linespoints ls 1");
+		};
+	}
 }

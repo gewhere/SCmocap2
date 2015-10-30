@@ -1,11 +1,11 @@
 + Array {
-	getMarkersFrame { | index |
+	getJoints { | joints |
 		var array, data;
 		
-		data = Array.newClear(index.size);
+		data = Array.newClear(joints.size);
 		
-		index.size do: { | i |
-			array = this[index[i]];
+		joints.size do: { | i |
+			array = this[joints[i]];
 
 			// check if it is a 2D array (mean will transform 1D array to a number)
 			if( array.rank == 2){

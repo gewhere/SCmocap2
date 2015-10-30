@@ -15,7 +15,7 @@ MCgnuplot {
 	initGnuplot { | mcread, m2jpar, animpar |
 		gnu = GNUPlot.new;
 		// gnu.sendCmd("unset key; unset tics; unset border; set view 60,60; set multiplot");
-		// gnu.sendCmd("splot 0");
+		// gnu.sendCmd("splot 0"); // set groundfloor
 		this.makeJoints( mcread, m2jpar, animpar );
 		rawData = mcread.param['data'];
 	}
@@ -64,45 +64,51 @@ MCgnuplot {
 			try {
 				tmp.size do: { |i|
 					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
-
-					//if(i == 0){
 					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
-					//}{
 					// ns:2 so to get a line of data and an empty line (DOES NOT WORK)
 					// http://www.gnuplotting.org/tag/linespoints/
 					// check plotting_data2.dat
 					//	gnu.replot([tmp[conn[i][0]-1],tmp[conn[i][1]-1]]);
-					//};	
 				};
 			};
 			"PRE-MYDATA: ".post; mydata.postln;
-			// mydata = mydata.removeNils;
 			"MYDATA: ".post; mydata.size.postln;
+			// set color-line style (blue-ish)
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
 			gnu.plot3seg(mydata, "", "scmocap", "linespoints ls 1");
 		};
 
 	}
 
-	animateFrame { | frame, type, what |
-		var tmp, mydata;
+	animateFrame { | frame, type, what, dt, skip, label="", style="linespoints" |
+		var tmp, mydata, array;
 
 		if((type === \joints)&&(what == nil)) {
 			tmp = rawData[frame.asSymbol].getJoints(joints);
-			"ORIGINAL tmp: ".post; tmp.postln;
-			mydata = Array.newClear(tmp.size - 1);
+			// "ORIGINAL tmp: ".post; tmp.postln;
+			mydata = Array.newClear(2*tmp.size - 1);
 			
 			try {
-				tmp.size do: { |i|
-					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
-					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
+				//this is a buggy solution for lace !!!
+				2*tmp.size do: { |i|
+					if (i%2 == 0){
+						// ("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
+						mydata[i] = tmp[conn[i][0]-1];
+					}{
+						// ("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
+						mydata[i] = tmp[conn[i][1]-1];
+					}
 				};
+		
 			};
-			"PRE-MYDATA: ".post; mydata.postln;
+			// "PRE-MYDATA: ".post; mydata.postln;
 			// mydata = mydata.removeNils;
-			"MYDATA: ".post; mydata.size.postln;
-			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
-			gnu.plot3seg(mydata, "", "scmocap", "linespoints ls 1");
+			// "MYDATA: ".post; mydata.size.postln;
+			// gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
+			//gnu.plotd3d(mydata, "", "scmocap", "linespoints ls 1");
+			
+			//this.changed(\data, mydata)
+			^mydata;
 		};
 	}
 }

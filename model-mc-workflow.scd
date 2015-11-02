@@ -4,7 +4,7 @@
 // [[15, 16, 17, 18], [15, 17], 19, 21, [25, 23], [16, 18], 20, 22, [26, 24], [5, 6, 15, 16, 17, 18], [5, 6], [1, 2, 3, 4], 5, 9, 11, 13, 6, 10, 12, 14] -- markerNum ORIGINAL , below I have include this -1 for appropriate indexing !!!!!
 
 (
-~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap.tsv";
+~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap_big.tsv";
 a = MCread(~path);
 a.param.keys;
 a.param['data'].size;
@@ -39,25 +39,24 @@ g.gnu.setZrange(0,2500);
 g.plotFrame(320, \joints);
 g.animateFrame(100, \joints, nil);
 f = { |i| g.animateFrame(i, \joints) };
-z = f.(12)
 
 (
 // animate 3d !!! -- BUGGY -- Need to put a dependant
 {
-	400 do: { |i|
+	2000 do: { |i|
 		if(i%2 == 0){
 			z = f.(i);
-			g.gnu.monitor3(z, 0.01, 1, 1, 1 );
+			// do not push the dt value below 0.05 (check its limits)
+			g.gnu.monitor3(z, 0.05, 1, 1, 1 );
 			i.postln;
 		};
-		0.02.wait;
-	}
+		0.01.wait;
+	};
 }.fork(AppClock);
 )
 
 g.gnu.startMonitor;
-g.gnu.stopMonitor;
-{z}.value
+
 //
 // f = { g.animateFrame(100, \joints, nil) };
 //g.gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");

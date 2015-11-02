@@ -1,4 +1,9 @@
 + GNUPlot {
+
+	*plotd3d{ |data,ns=1,label="",style="linespoints"|
+		this.bootDefault;
+		default.plotd3d( data, ns, label, style );
+	}
 	// 3D animation -- http://wiki.tcl.tk/13555
 	// http://stackoverflow.com/questions/11638636/gnuplot-plotting-positionxyz-vs-time-data-inside-a-specified-space-eg-a-box
 	monitor3{ |updateF,dt,length=1,ns=1,skip=1| // id: id of data to monitor, dt: time step, skip: stepsize
@@ -15,7 +20,7 @@
 						if ( ns > 1, {
 							this.plotd3d( hisdata, ns );
 						},{
-							this.plotd3d( hisdata ); //.flatten );//.flatten, ns); //.flatten, ns );
+							this.plotd3d( hisdata );
 						});
 						cnt = 0;
 					});
@@ -25,52 +30,45 @@
 	}
 
 	plotd3d{ |data,ns=1,label="",style="linespoints"|
-		var delims=[" ", "\n\n", "\n\n\n"];
+		var delims=[" ", "\n", "\n\n\n"];
+		var count=0;
+		var str="";
+		var tmp="";
+		
 		defer{
 			pipe.putString("splot ");
-			(ns-1).do{ |i|
-				//pipe.putString("'-' with "++style++" title \""++label++(i+1)++"\",");
-				pipe.putString("'-' with "++style++" title \""++label++(i+1)++"\"\n\n\n");
-			};
 			pipe.putString("'-' with "++style++" title \""++label++ns++"\"\n");
-			if ( ns > 1,
-				{
-					ns.do{ |id|
-						data.do{ |col,i|
-							col.do { |sub|
-								sub.do { |val|
-									//pipe.putString( "%\n".format(val) );
-									pipe.putString( "%".format(val) ++ delims[0] );
-									//pipe.putString("e\n\n");
-								};
-								//pipe.putString("\n");
-								pipe.putString( delims[1] );
-							};
-							pipe.putString( "e" ++ delims[2]);
-							//pipe.putString("\n");
-							"pipe: ".post; pipe.postln;
-						};
-						pipe.putString( delims[2] );
-						//"pipe: ".post; pipe.postln;
-					};
-				},
-				{
+			data.do{ |col, i|
+				col.do { |sub, k|
+					sub.do { |val, l|
+						count = count + 1;
+						"COUNTER: ".post; count.postln;
+						
+						//"[val, l] = ".post; [val, l].postln;
 
-					data.do{ |col,i|
-						col.do { |sub|
-							sub.do { |val|
-								//pipe.putString( "%\n".format(val) );
-								pipe.putString( "%".format(val) ++ delims[0] );
-								//pipe.putString("e\n\n");
-							};
-							//pipe.putString("\n");
+						if( l == 0 ){
+							val.do { |item|
+								pipe.putString( "%".format(item) ++ delims[0] );
+								str = str ++ "%".format(item) ++ delims[0];
+							}	
+						}
+						{
 							pipe.putString( delims[1] );
+							str = str ++ delims[1];
+							val.do { |item|
+								pipe.putString( "%".format(item) ++ delims[0] );
+								str = str ++ "%".format(item) ++ delims[0];
+							}
+							
 						};
-						pipe.putString(  "e" ++  delims[2]);
-						//pipe.putString("\n");
-						"PIPE1: ".post; pipe.postln;
 					};
-				});
+					pipe.putString( delims[2] );
+					str = str ++ delims[2];
+				};
+				pipe.putString( "e" ++ delims[2] );
+				str = str ++ "e" ++ delims[2];
+				"STRING = ".post; str.postln;
+			};
 			pipe.flush;
 		};
 	}

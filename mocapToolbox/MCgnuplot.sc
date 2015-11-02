@@ -83,30 +83,22 @@ MCgnuplot {
 	animateFrame { | frame, type, what, dt, skip, label="", style="linespoints" |
 		var tmp, mydata, array;
 
-		if((type === \joints)&&(what == nil)) {
+		if((type == \joints)&&(what == nil)) {
 			tmp = rawData[frame.asSymbol].getJoints(joints);
-			// "ORIGINAL tmp: ".post; tmp.postln;
-			mydata = Array.newClear(2*tmp.size - 1);
-			
+			"tmp-size: ".post; tmp.size.postln;
+
+			mydata = Array.newClear(tmp.size - 1);
+			// gnu.plot3(tmp, label: "mcmocap");
+			// do this an animpar stick figure
 			try {
-				//this is a buggy solution for lace !!!
-				2*tmp.size do: { |i|
-					if (i%2 == 0){
-						// ("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
-						mydata[i] = tmp[conn[i][0]-1];
-					}{
-						// ("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
-						mydata[i] = tmp[conn[i][1]-1];
-					}
+				tmp.size do: { |i|
+					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
+					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
+					// http://www.gnuplotting.org/tag/linespoints/
 				};
-		
 			};
-			// "PRE-MYDATA: ".post; mydata.postln;
-			// mydata = mydata.removeNils;
-			// "MYDATA: ".post; mydata.size.postln;
-			// gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
-			//gnu.plotd3d(mydata, "", "scmocap", "linespoints ls 1");
-			
+			"MYDATA: ".post; mydata.postln;
+			"MYDATA-size: ".post; mydata.size.postln;
 			//this.changed(\data, mydata)
 			^mydata;
 		};

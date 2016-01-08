@@ -22,7 +22,7 @@ MCgnuplot {
 
 	makeJoints { | mcread, m2jpar, animpar |
 		var tmp;
-		
+
 		joints = m2jpar.param['markerNum'];
 		conn = animpar.param['conn'];
 		rawData = mcread.param['data'];
@@ -30,7 +30,7 @@ MCgnuplot {
 		data = Array.newClear(joints.size);
 		"data array: ".post; data.size.postln;
 	}
-	
+
 	plotFrame { | frame, type, what | // ask Markers-only, joints, etc
 		var tmp, mydata;
 
@@ -51,7 +51,7 @@ MCgnuplot {
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
 			gnu.sendCmd("replot");
 			gnu.scatter(data, 'MoCap markers');
-			
+
 			"data = ".post; data.postln;
 		}
 		{ (type == \joints) && (what == nil) }{
@@ -103,4 +103,11 @@ MCgnuplot {
 			^mydata;
 		};
 	}
+
+	// update { | who, what, value |
+	// 	switch(what,
+	// 		\data,
+	// 	)
+	//
+	// }
 }

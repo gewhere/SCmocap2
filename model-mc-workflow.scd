@@ -4,7 +4,7 @@
 // [[15, 16, 17, 18], [15, 17], 19, 21, [25, 23], [16, 18], 20, 22, [26, 24], [5, 6, 15, 16, 17, 18], [5, 6], [1, 2, 3, 4], 5, 9, 11, 13, 6, 10, 12, 14] -- markerNum ORIGINAL , below I have include this -1 for appropriate indexing !!!!!
 
 (
-~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap.tsv";
+~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap_big.tsv";
 a = MCread(~path);
 a.param.keys;
 a.param['data'].size;
@@ -15,7 +15,7 @@ b.param;
 
 b.param.putPairs([
 	nMarkers: 40,
-	//markerNum: #[ [ 14, 15, 16, 17 ], [ 14, 16 ], 18, 20, [ 24, 22 ], [ 15, 17 ], 19, 21, [ 25, 23 ], [ 4, 5, 14, 15, 16, 17 ], [ 4, 5 ], [ 0, 1, 2, 3 ], 4, 8, 10, 12, 5, 9, 11, 13 ],	
+	//	markerNum: #[ [ 14, 15, 16, 17 ], [ 14, 16 ], 18, 20, [ 24, 22 ], [ 15, 17 ], 19, 21, [ 25, 23 ], [ 4, 5, 14, 15, 16, 17 ], [ 4, 5 ], [ 0, 1, 2, 3 ], 4, 8, 10, 12, 5, 9, 11, 13 ],
 	//markerNum: #[[ 45, 46, 47, 48 ], [ 45, 47 ], 49, 51, [ 55, 53 ], [ 46, 48 ], 50, 52, [ 56, 54 ], [ 35, 36, 45, 46, 47, 48 ], [ 35, 36 ], [ 31, 32, 33, 34 ], 35, 39, 41, 43, 36, 40, 42, 44 ],
 	markerNum: #[ [ 14, 15, 16, 17 ], [ 14, 16 ], 18, 20, [ 24, 22 ], [ 15, 17 ], 19, 21, [ 25, 23 ], [ 4, 5, 14, 15, 16, 17 ], [ 4, 5 ], [ 0, 1, 2, 3 ], 4, 8, 10, 12, 5, 9, 11, 13, [ 45, 46, 47, 48 ], [ 45, 47 ], 49, 51, [ 55, 53 ], [ 46, 48 ], 50, 52, [ 56, 54 ], [ 35, 36, 45, 46, 47, 48 ], [ 35, 36 ], [ 31, 32, 33, 34 ], 35, 39, 41, 43, 36, 40, 42, 44 ],
 	markerName: ['p1_root', 'p1_hip_L', 'p1_knee_L', 'p1_ankle_L', 'p1_toe_L', 'p1_hip_R', 'p1_knee_R', 'p1_ankle_R', 'p1_toe_R', 'p1_torso', 'p1_neck', 'p1_head', 'p1_shoulder_L', 'p1_elbow_L', 'p1_wrist_L', 'pl_finger_L', 'p1_shoulder_R', 'p1_elbow_R', 'p1_wrist_R', 'pl_finger_R']
@@ -31,8 +31,42 @@ c.param['conn'] = [[11, 12], [11, 17], [11, 13], [10, 11], [1, 10], [13, 14], [1
 c.param['conn'].size;
 )
 
+
 g = MCgnuplot(a,b,c);
-g.gnu.setXrange(-1000,1500);
-g.gnu.setYrange(-1000,1500);
-g.gnu.setZrange(0,2500);
+g.gnu.setXrange(-1500,1500);
+g.gnu.setYrange(-1500,1500);
+g.gnu.setZrange(0,3000);
 g.plotFrame(320, \joints);
+g.animateFrame(100, \joints, nil);
+f = { |i| g.animateFrame(i, \joints) };
+
+(
+// animate 3d !!! -- BUGGY -- Need to put a dependant
+{
+	2000 do: { |i|
+		if(i%2 == 0){
+			z = f.(i);
+			// do not push the dt value below 0.05 (check its limits)
+			g.gnu.monitor3(z, 0.05, 1, 1, 1 );
+			i.postln;
+		};
+		0.02.wait;
+	};
+}.fork(AppClock);
+)
+
+g.gnu.startMonitor;
+
+//
+// f = { g.animateFrame(100, \joints, nil) };
+//g.gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
+// g.gnu.monitor3(z.value, 0.2, 1, 1, 1 );
+g.gnu.startMonitor;
+g.gnu.stopMonitor;
+
+//
+(
+~mcadapter = { |animate, what, data|
+	{  }
+}
+)

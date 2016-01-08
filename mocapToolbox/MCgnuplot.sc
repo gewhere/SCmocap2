@@ -15,14 +15,14 @@ MCgnuplot {
 	initGnuplot { | mcread, m2jpar, animpar |
 		gnu = GNUPlot.new;
 		// gnu.sendCmd("unset key; unset tics; unset border; set view 60,60; set multiplot");
-		// gnu.sendCmd("splot 0");
+		// gnu.sendCmd("splot 0"); // set groundfloor
 		this.makeJoints( mcread, m2jpar, animpar );
 		rawData = mcread.param['data'];
 	}
 
 	makeJoints { | mcread, m2jpar, animpar |
 		var tmp;
-		
+
 		joints = m2jpar.param['markerNum'];
 		conn = animpar.param['conn'];
 		rawData = mcread.param['data'];
@@ -30,7 +30,7 @@ MCgnuplot {
 		data = Array.newClear(joints.size);
 		"data array: ".post; data.size.postln;
 	}
-	
+
 	plotFrame { | frame, type, what | // ask Markers-only, joints, etc
 		var tmp, mydata;
 
@@ -51,12 +51,12 @@ MCgnuplot {
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
 			gnu.sendCmd("replot");
 			gnu.scatter(data, 'MoCap markers');
-			
+
 			"data = ".post; data.postln;
 		}
 		{ (type == \joints) && (what == nil) }{
 			// this has length 20 - as the total number of markers in Demster's model
-			tmp = rawData[frame.asSymbol].getMarkersFrame(joints);
+			tmp = rawData[frame.asSymbol].getJoints(joints);
 			"ORIGINAL tmp: ".post; tmp.postln;
 			mydata = Array.newClear(tmp.size - 1);
 			// gnu.plot3(tmp, label: "mcmocap");
@@ -64,25 +64,50 @@ MCgnuplot {
 			try {
 				tmp.size do: { |i|
 					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
-
-					//if(i == 0){
 					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
-					//}{
 					// ns:2 so to get a line of data and an empty line (DOES NOT WORK)
 					// http://www.gnuplotting.org/tag/linespoints/
 					// check plotting_data2.dat
 					//	gnu.replot([tmp[conn[i][0]-1],tmp[conn[i][1]-1]]);
-					//};	
 				};
 			};
-			"PRE-MYDATA: ".post; mydata.size.postln;
-			// mydata = mydata.removeNils;
+			"PRE-MYDATA: ".post; mydata.postln;
 			"MYDATA: ".post; mydata.size.postln;
+			// set color-line style (blue-ish)
 			gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
 			gnu.plot3seg(mydata, "", "scmocap", "linespoints ls 1");
 		};
 
 	}
 
+	animateFrame { | frame, type, what, dt, skip, label="", style="linespoints" |
+		var tmp, mydata, array;
 
+		if((type == \joints)&&(what == nil)) {
+			tmp = rawData[frame.asSymbol].getJoints(joints);
+			"tmp-size: ".post; tmp.size.postln;
+
+			mydata = Array.newClear(tmp.size - 1);
+			// gnu.plot3(tmp, label: "mcmocap");
+			// do this an animpar stick figure
+			try {
+				tmp.size do: { |i|
+					("tmp[" ++i.asString++ "] = ").post; tmp[i].postln;
+					mydata[i] = [tmp[conn[i][0]-1],tmp[conn[i][1]-1]];
+					// http://www.gnuplotting.org/tag/linespoints/
+				};
+			};
+			"MYDATA: ".post; mydata.postln;
+			"MYDATA-size: ".post; mydata.size.postln;
+			//this.changed(\data, mydata)
+			^mydata;
+		};
+	}
+
+	// update { | who, what, value |
+	// 	switch(what,
+	// 		\data,
+	// 	)
+	//
+	// }
 }

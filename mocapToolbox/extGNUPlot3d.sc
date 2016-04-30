@@ -15,7 +15,7 @@
 				hisdata.pop;
 				hisdata = hisdata.addFirst( updateFunc.value );
 				cnt = cnt + 1;
-				if ( cnt == skip,
+				if ( cnt == skip, 
 					{
 						if ( ns > 1, {
 							this.plotd3d( hisdata, ns );

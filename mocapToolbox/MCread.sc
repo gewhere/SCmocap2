@@ -16,12 +16,12 @@ MCread {
 		// check if file exists
 		fn = TabFileReader.read(filename);
 		this.loadParameters(filename);
-		
+
 	}
 
 	loadParameters { | filename |
 		var allMarkersNames, tmp;
-		
+
 		param = IdentityDictionary.new;
 		// remove the 1st element from markername ("MARKER_NAMES")
 		tmp = fn[18].size - 1;
@@ -29,7 +29,7 @@ MCread {
 		allMarkersNames.size do: { |i|
 			allMarkersNames[i] = fn[18][i+1];
 		};
-		
+
 		param.putPairs([
 			datatype: "MoCap data",
 			filename: filename,
@@ -48,7 +48,7 @@ MCread {
 
 		// parameters.put(\data, data);
 	}
-	
+
 	cleanData {
 		// this method removes the first lines which have the metadata like date-time, total markers, etc. (and any empty lines produced from Stream -- see. FileReader)
 		// Also fixes the data that I get from TabFileReader, for some reason I cannot do binary operations on the array if I do not clean them first (as below -- I am not sure how 'hacky' is this, I think as far it works is fine! Occam's razor)
@@ -58,13 +58,13 @@ MCread {
 			if( (i > 18) && (i%2 == 0) ){
 				str = fn[i].cs;
 				cleanStr = str.findRegexp("\-?[0-9]+\.[0-9]+");
-				
+
 				array = Array.newClear(186);
 				cleanStr.size.do { | i |
 					array[i] = cleanStr[i][1].interpret;
 				};
-				// parameters['data'] is an event. Its indexes are even numbers starting from zero (0) 
-				param['data'].put((i - 20).asSymbol, array.clump(3));
+				// parameters['data'] is an event. Its indexes are even numbers starting from zero (0)
+				this.param['data'].put((i - 20).asSymbol, array.clump(3));
 			};
 		};
 	}

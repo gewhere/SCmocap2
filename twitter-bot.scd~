@@ -1,0 +1,6 @@
+Main.recompile;
+
+TwitterBot.new;
+()
+
+("\ls".cs).unixCmd

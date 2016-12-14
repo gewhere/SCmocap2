@@ -31,6 +31,12 @@ c.param['conn'] = [[11, 12], [11, 17], [11, 13], [10, 11], [1, 10], [13, 14], [1
 c.param['conn'].size;
 )
 
+a.param[\data]
+
+b.param[\markerNum]
+b.param[\markerName]
+b
+a
 
 g = MCgnuplot(a,b,c);
 g.gnu.setXrange(-1500,1500);
@@ -70,3 +76,7 @@ g.gnu.stopMonitor;
 	{  }
 }
 )
+// stop interpreter
+0.exit;
+
+"pwd".unixCmd

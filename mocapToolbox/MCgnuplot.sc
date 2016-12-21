@@ -4,7 +4,7 @@ MCgnuplot {
 	var <>gnu;
 	var <>markers, <>joints, <>conn;
 	var <>updater, <>model, <>setValueFunction;
-	
+
 	*new { | mcread, m2jpar, animpar |
 		^super.new.init(mcread, m2jpar, animpar)
 	}
@@ -62,7 +62,7 @@ MCgnuplot {
 		}
 		{ (type == \joints) && (what == nil) }{
 			// this has length 20 - as the total number of markers in Demster's model
-			tmp = rawData[frame.asSymbol].getJoints(joints);
+			tmp = rawData[frame].getJoints(joints);
 			"ORIGINAL tmp: ".post; tmp.postln;
 			mydata = Array.newClear(tmp.size - 1);
 			// gnu.plot3(tmp, label: "mcmocap");
@@ -100,10 +100,10 @@ MCgnuplot {
 			{
 				frame do: { |k|
 					if (k+30%2 == 0){
-						tmp = rawData[(k+30).asSymbol].getJoints(joints);
+						tmp = rawData[k+30].getJoints(joints);
 						//tmp = rawData[(k+30).asSymbol].performList(\getJoints,joints);
 						"tmp-size: ".post; tmp.size.postln;
-						
+
 						mydata = Array.newClear(tmp.size - 1);
 						// gnu.plot3(tmp, label: "mcmocap");
 						// do this an animpar stick figure
@@ -118,20 +118,20 @@ MCgnuplot {
 						//"MYDATA-size: ".post; mydata.size.postln;
 						//this.changed(\data, mydata)
 						//^mydata;
-						
+
 						setValueFunction.value(mydata);
 						dt.wait;
 					}
 				};
 			}.fork(AppClock)
 		};
-		
+
 		updater = { | who, what, val |
 			if(what == \value, {
 				//this.window_(val);
 				postf("window: %n", val.postln);
 				gnu.startMonitor;
-		
+
 
 				gnu.monitor3({val},0.01);
 			})

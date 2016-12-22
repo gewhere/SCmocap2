@@ -1,4 +1,4 @@
-MCmean {
+MCstd {
 	var <data;
 
 	*new { | dataStruct |
@@ -10,6 +10,6 @@ MCmean {
 	}
 
 	getMean { | dataStruct |
-		data = dataStruct.param['data'].values.mean;
+		data = dataStruct.param['data'].values.stdDev;
 	}
 }

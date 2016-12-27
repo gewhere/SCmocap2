@@ -42,7 +42,7 @@ g.plotFrame(120, \joints);
 
 
 // get subset of markers
-p = MCgetmarker(b, [1,4,12]);
+p = MCgetmarker(a, [1,4,12,20]);
 p.param['data']
 
 // get temporal mean

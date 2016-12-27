@@ -26,6 +26,7 @@ ln -s /path/to/mocapToolbox ~/.local/share/SuperCollider/Extensions
 - MCread :: Basic mocap data structure for reading raw motion capture timeseries data from tsv files
 - MCm2jpar :: Basic structure for markers to joints parameter structure
 - MCanimpar :: Basic structure for animation parameters
+- MCgnuplot :: Class for plotting
 - MCgetmarker :: Extracts a subset of markers
 - MCgetmarkername :: Returns markers' labels
 - MCmean :: Calculates the temporal mean over all frames

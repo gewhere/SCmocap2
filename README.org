@@ -23,7 +23,7 @@ ln -s /path/to/mocapToolbox ~/.local/share/SuperCollider/Extensions
 * Release Notes
 ** v0.1
 *** New features
-- MCread :: Basic mocap data structure for reading raw motion capture timeseries data for tsv files
+- MCread :: Basic mocap data structure for reading raw motion capture timeseries data from tsv files
 - MCm2jpar :: Basic structure for markers to joints parameter structure
 - MCanimpar :: Basic structure for animation parameters
 - MCgetmarker :: Extracts a subset of markers
@@ -35,3 +35,6 @@ ln -s /path/to/mocapToolbox ~/.local/share/SuperCollider/Extensions
 
 * Examples
 - See =./model-mc-workflow.scd=
+
+* Screenshots
+[[./img/scmocap_dyad_view6015.png]]

@@ -39,3 +39,12 @@ g.gnu.setYrange(-1500,1500);
 g.gnu.setZrange(0,3000);
 // plot a single frame
 g.plotFrame(120, \joints);
+
+
+// get subset of markers
+p = MCgetmarker(b, [1,4,12]);
+p.param['data']
+
+// get temporal mean
+m = MCmean(p)
+m.data

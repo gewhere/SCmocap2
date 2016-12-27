@@ -13,9 +13,12 @@ MCread {
 	}
 
 	readFile { | filename |
+		var data;
 		// check if file exists
-		fn = TabFileReader.read(filename);
-		fn.collect { |i,idx| if(i[0].isEmpty){ fn.removeAt(idx); } };
+		data = TabFileReader.read(filename);
+		data = data select: { |v| v[0].isEmpty.not };
+		//fn.collect { |i,idx| if(i[0].isEmpty){ fn.removeAt(idx); } };
+		fn = data;
 		this.loadParameters(filename);
 	}
 
@@ -40,7 +43,7 @@ MCread {
 			nAnalog: fn[4][1].interpret,
 			timederOrder: 0,
 			markerName: allMarkersNames,
-			data: IdentityDictionary(),
+			data: IdentityDictionary(),//Array2D
 			analogdata: fn[5][1].interpret,
 			other: fn[7][1] // TIME_STAMP
 		]);

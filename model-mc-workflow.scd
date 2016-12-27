@@ -4,7 +4,7 @@
 // [[15, 16, 17, 18], [15, 17], 19, 21, [25, 23], [16, 18], 20, 22, [26, 24], [5, 6, 15, 16, 17, 18], [5, 6], [1, 2, 3, 4], 5, 9, 11, 13, 6, 10, 12, 14] -- markerNum ORIGINAL , below I have include this -1 for appropriate indexing !!!!!
 
 (
-~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap_big.tsv";
+~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap.tsv";
 a = MCread(~path);
 a.param.keys;
 a.param['data'].size;
@@ -31,54 +31,11 @@ c.param['conn'] = [[11, 12], [11, 17], [11, 13], [10, 11], [1, 10], [13, 14], [1
 c.param['conn'].size;
 )
 
-a.param[\data]
 
-a.param.keys.postcs
-
-b.param[\markerNum]
-b.param[\markerName]
-b
-a
-
+// init gnuplot
 g = MCgnuplot(a,b,c);
 g.gnu.setXrange(-1500,1500);
 g.gnu.setYrange(-1500,1500);
 g.gnu.setZrange(0,3000);
-g.plotFrame(320, \joints);
-g.animateFrame(100, \joints, nil);
-f = { |i| g.animateFrame(i, \joints) };
-
-(
-// animate 3d !!! -- BUGGY -- Need to put a dependant
-{
-	2000 do: { |i|
-		if(i%2 == 0){
-			z = f.(i);
-			// do not push the dt value below 0.05 (check its limits)
-			g.gnu.monitor3(z, 0.05, 1, 1, 1 );
-			i.postln;
-		};
-		0.02.wait;
-	};
-}.fork(AppClock);
-)
-
-g.gnu.startMonitor;
-
-//
-// f = { g.animateFrame(100, \joints, nil) };
-//g.gnu.sendCmd("set style line 1 lc rgb '#0060ad' lt 1 lw 2 pt 7 ps 1.5");
-// g.gnu.monitor3(z.value, 0.2, 1, 1, 1 );
-g.gnu.startMonitor;
-g.gnu.stopMonitor;
-
-//
-(
-~mcadapter = { |animate, what, data|
-	{  }
-}
-)
-// stop interpreter
-0.exit;
-
-"pwd".unixCmd
+// plot a single frame
+g.plotFrame(120, \joints);

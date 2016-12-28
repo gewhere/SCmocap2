@@ -1,0 +1,41 @@
+* SCmocap toolbox
+- SCmocap is a library based on [[https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox/MCTmanual][MoCap Toolbox]], by Petri Toiviainen and Birgitta Burger.
+- The aim is to make a motion capture library for SC3 which will make possible to do realtime movement analysis and interactive music applications for performance and music-therapeutic purposes.
+- SCmocap is tested on full-body motion capture technology using passive markers, though this does not exclude possible applications for different motion capture technologies.
+
+* Installation
+
+** Dependencies
+- [[http://www.gnuplot.info/][GNUPLOT]]
+- [[https://github.com/supercollider-quarks/GNUPlot][GNUPLOT quark]]
+- [[https://github.com/supercollider-quarks/MathLib][MathLib quark]]
+
+** How to install
+- Symlink or move =./mocapToolbox/= to =Platform.userExtensionDir=
+  + =~/.local/share/SuperCollider/Extensions= on Linux
+  + =~/Library/Application Support/SuperCollider/Extensions= on MacOS
+
+
+#+BEGIN_SRC sh :eval no
+ln -s /path/to/mocapToolbox ~/.local/share/SuperCollider/Extensions
+#+END_SRC
+
+* Release Notes
+** v0.1
+*** New features
+- MCread :: Basic mocap data structure for reading raw motion capture timeseries data from tsv files
+- MCm2jpar :: Basic structure for markers to joints parameter structure
+- MCanimpar :: Basic structure for animation parameters
+- MCgnuplot :: Class for plotting
+- MCgetmarker :: Extracts a subset of markers
+- MCgetmarkername :: Returns markers' labels
+- MCmean :: Calculates the temporal mean over all frames
+- MCstd :: Calculates the temporal standard deviation over all frames
+- extGNUPlot3d.sc :: 3D methods for plotting MoCap data using GNUPLOT quark for SC3
+- getJoints.sc :: Extracts joints from markers
+
+* Examples
+- See =./model-mc-workflow.scd=
+
+* Screenshots
+[[./img/scmocap_dyad_view6015.png]]

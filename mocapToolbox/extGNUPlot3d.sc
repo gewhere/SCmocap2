@@ -11,11 +11,11 @@
 		hisdata = Array.fill( length, 0 );
 		monrout = Task{
 			var cnt = 0;
-			inf.do{ 
+			inf.do{
 				hisdata.pop;
 				hisdata = hisdata.addFirst( updateFunc.value );
 				cnt = cnt + 1;
-				if ( cnt == skip, 
+				if ( cnt == skip,
 					{
 						if ( ns > 1, {
 							this.plotd3d( hisdata, ns );
@@ -34,7 +34,7 @@
 		var count=0;
 		var str="";
 		var tmp="";
-		
+
 		defer{
 			pipe.putString("splot ");
 			pipe.putString("'-' with "++style++" title \""++label++ns++"\"\n");
@@ -43,14 +43,14 @@
 					sub.do { |val, l|
 						count = count + 1;
 						"COUNTER: ".post; count.postln;
-						
+
 						//"[val, l] = ".post; [val, l].postln;
 
 						if( l == 0 ){
 							val.do { |item|
 								pipe.putString( "%".format(item) ++ delims[0] );
 								str = str ++ "%".format(item) ++ delims[0];
-							}	
+							}
 						}
 						{
 							pipe.putString( delims[1] );
@@ -59,7 +59,7 @@
 								pipe.putString( "%".format(item) ++ delims[0] );
 								str = str ++ "%".format(item) ++ delims[0];
 							}
-							
+
 						};
 					};
 					pipe.putString( delims[2] );
@@ -98,7 +98,7 @@
 	// 	hisdata = Array.fill( length, 0 );
 	// 	monrout = Task{
 	// 		var cnt = 0;
-	// 		inf.do{ 
+	// 		inf.do{
 	// 			hisdata.pop;
 	// 			hisdata = hisdata.addFirst( updateFunc.value );
 	// 			cnt = cnt + 1;
@@ -118,7 +118,7 @@
 		defer {
 			tmpname = this.pr_tmpname;
 			this.class.pr_writeTempData4(data, tmpname: tmpname);
-			
+
 			["GNUPlot.plot3 data size: ", data.size].postln;
 			title !? {pipe.putString("set title %\n".format(title.asString.quote))};
 			pipe.putString("splot % with % title %\n".format(tmpname.asString.quote, style, label.asString.quote));
@@ -129,18 +129,18 @@
 	// the data for this should be an array-of-arrays-of-arrays, eg:
 	// [[p01, p02, p03], [p10, p11, p12], [p20, p21, p22]] where each "pXX" is an array of 3D co-ords.
     // I ADDED THIS
-	// *pr_writeTempData4 { |data, delims([" ", "\n", "\n\n"]), tmpname|
-	// 	// And add exception handling.
-	// 	var fh = File.new(tmpname,"w");
-	// 	data.do{	|col|
-	// 		col.do{|sub|
-	// 			sub.do {|val|
-	// 				fh.putString(val.asString ++ delims[0]);
-	// 			};
-	// 			fh.putString(delims[1]);
-	// 		};
-	// 		fh.putString(delims[2]);
-	// 	};
-	// 	fh.close;
-	// }
+	*pr_writeTempData4 { |data, delims([" ", "\n", "\n\n"]), tmpname|
+		// And add exception handling.
+		var fh = File.new(tmpname,"w");
+		data.do{	|col|
+			col.do{|sub|
+				sub.do {|val|
+					fh.putString(val.asString ++ delims[0]);
+				};
+				fh.putString(delims[1]);
+			};
+			fh.putString(delims[2]);
+		};
+		fh.close;
+	}
 }

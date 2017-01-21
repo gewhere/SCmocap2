@@ -5,7 +5,7 @@ MCgnuplot {
 	var <>markers, <>joints, <>conn;
 	var <>updater, <>model, <>setValueFunction;
 
-	*new { | mcread, m2jpar, animpar |
+	*new { | mcread, m2jpar, animpar | // m2jpar & animpar can be nil -> should return only the markers (no joints)
 		^super.new.init(mcread, m2jpar, animpar)
 	}
 

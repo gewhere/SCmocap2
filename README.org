@@ -1,7 +1,6 @@
 * SCmocap toolbox
 - SCmocap is a library based on [[https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox/MCTmanual][MoCap Toolbox]], by Petri Toiviainen and Birgitta Burger.
 - The aim is to make a motion capture library for SC3 which will make possible to do realtime movement analysis and interactive music applications for performance and music-therapeutic purposes.
-- SCmocap is tested on full-body motion capture technology using passive markers, though this does not exclude possible applications for different motion capture technologies.
 
 * Installation
 
@@ -33,6 +32,16 @@ ln -s /path/to/mocapToolbox ~/.local/share/SuperCollider/Extensions
 - MCstd :: Calculates the temporal standard deviation over all frames
 - extGNUPlot3d.sc :: 3D methods for plotting MoCap data using GNUPLOT quark for SC3
 - getJoints.sc :: Extracts joints from markers
+** TODO v0.11
+- MC2frontal
+- MCcenter
+- MCcumdist
+- MCcut
+- MCfillgaps
+- MCmarkerdist
+- MCmerge
+- MCrotate
+- MCtrim
 
 * Examples
 - See =./model-mc-workflow.scd=

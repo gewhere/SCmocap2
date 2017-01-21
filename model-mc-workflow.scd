@@ -4,7 +4,7 @@
 // [[15, 16, 17, 18], [15, 17], 19, 21, [25, 23], [16, 18], 20, 22, [26, 24], [5, 6, 15, 16, 17, 18], [5, 6], [1, 2, 3, 4], 5, 9, 11, 13, 6, 10, 12, 14] -- markerNum ORIGINAL , below I have include this -1 for appropriate indexing !!!!!
 
 (
-~path = "/home/aucotsi/code/sccode/sc3-jyu/data/mocap.tsv";
+~path = "/home/aucotsi/sc3-jyu/data/mocap.tsv";
 a = MCread(~path);
 a.param.keys;
 a.param['data'].size;
